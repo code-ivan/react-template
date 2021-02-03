@@ -1,0 +1,3 @@
+# React SSR template
+
+🍻

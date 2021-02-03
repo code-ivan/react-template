@@ -1,0 +1,61 @@
+// generates classes such as:
+// pl-16:   padding-left: 16px
+// pl--16:   padding-left: -16px
+// py-8:    padding-top: 8px, padding-bottom: 8px
+// mx-auto: margin-left: auto, margin-right: auto
+$sizes: (
+  	 0:      8px  * 0,
+  	 4:      8px  * 0.5,
+  	 8:      8px  * 1,
+  	12:      8px  * 1.5,
+	16:      8px  * 2,
+	24:      8px  * 3,
+	32:      8px  * 4,
+	40:      8px  * 5,
+
+	 -4:      -8px  * 0.5,
+	 -8:      -8px  * 1,
+	-12:      -8px  * 1.5,
+	-16:      -8px  * 2,
+	-24:      -8px  * 3,
+	-32:      -8px  * 4,
+	-40:      -8px  * 5,
+	auto:    auto,
+	inherit: inherit,
+	initial: initial
+) !default;
+
+@each $index, $size in $sizes {
+	.m-#{$index} { margin: $size !important; }
+	.p-#{$index} { padding: $size !important; }
+	@each $abbrev, $side in (t: top, l: left, b: bottom, r: right) {
+		.m#{$abbrev}-#{$index} { margin-#{$side}: $size !important; }
+		.p#{$abbrev}-#{$index} { padding-#{$side}: $size !important; }
+	}
+	.mx-#{$index} { margin-left: $size !important; margin-right: $size !important; }
+	.px-#{$index} { padding-left: $size !important; padding-right: $size !important; }
+	.my-#{$index} { margin-top: $size !important; margin-bottom: $size !important; }
+	.py-#{$index} { padding-top: $size !important; padding-bottom: $size !important; }
+}
+
+
+// generates classes such as:
+// w-75:   width: 75%
+$widths: (
+  	 25:      25%,
+  	 50:      50%,
+  	 75:      75%,
+  	100:     100%,
+
+	 50px:    50px,
+	100px:   100px,
+	150px:   150px,
+	200px:   200px,
+	300px:   300px,
+	500px:   500px,
+	800px:   800px
+) !default;
+
+@each $name, $size in $widths {
+	.w-#{$name} { width: $size !important; }
+}
