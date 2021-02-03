@@ -6,6 +6,7 @@ import { StaticRouter } from "react-router-dom";
 import { renderToString } from 'react-dom/server'
 import { ChunkExtractor } from '@loadable/server'
 
+const PORT = process.env.PORT || 9000;
 const app = express()
 
 app.use(express.static(path.join(__dirname, '../../public')))
@@ -71,4 +72,4 @@ app.get('*', (req, res) => {
 })
 
 // eslint-disable-next-line no-console
-app.listen(9000, () => console.log('Server started http://localhost:9000'))
+app.listen(PORT, () => console.log(`Server started http://localhost:${PORT}`))
