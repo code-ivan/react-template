@@ -1,6 +1,8 @@
 import React from 'react'
 import Helmet from 'react-helmet'
+import loadable from "@loadable/component";
 
+const Moment = loadable.lib(() => import("moment"));
 import Counter from '../../components/Counter'
 
 const Home = ()=>{
@@ -8,6 +10,8 @@ const Home = ()=>{
 		<div>
 			<Helmet title="Home" />
 			<h2>Home</h2>
+			
+			<Moment>{(moment) => moment().format("HH:mm")}</Moment>
 			<Counter />
 		</div>
 	)
