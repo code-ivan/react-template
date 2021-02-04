@@ -9,14 +9,6 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 const DIST_PATH = path.resolve(__dirname, "public/dist");
 const production = process.env.NODE_ENV === "production";
 const development = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
-const cssLoader = (target) =>
-	development && target == "web"
-		? [
-				{
-					loader: "style-loader"
-				}
-		  ]
-		: [MiniCssExtractPlugin.loader];
 
 const getConfig = (target) => ({
 	name: target,
@@ -24,6 +16,7 @@ const getConfig = (target) => ({
 	mode: development ? "development" : "production",
 	target,
 	entry: [
+		'@babel/polyfill',
 		...(development && target === "web"
 			? [
 					"react-hot-loader/patch",
@@ -49,7 +42,7 @@ const getConfig = (target) => ({
 				test: /\.scss$|\.css$/,
 				include: path.join(__dirname, "src/styles/main.scss"),
 				use: [
-					...cssLoader(target),
+					MiniCssExtractPlugin.loader,
 					{
 						loader: "css-loader",
 						options: {
@@ -70,7 +63,7 @@ const getConfig = (target) => ({
 				test: /\.scss$|\.css$/,
 				exclude: path.join(__dirname, "src/styles/main.scss"),
 				use: [
-					...cssLoader(target),
+					MiniCssExtractPlugin.loader,
 					{
 						loader: "css-loader",
 						options: {

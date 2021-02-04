@@ -1,75 +1,53 @@
-import path from 'path'
-import express from 'express'
-import React from 'react'
-import { StaticRouter } from "react-router-dom";
-
-import { renderToString } from 'react-dom/server'
-import { ChunkExtractor } from '@loadable/server'
+import path from "path";
+import express from "express";
+import renderRoute from "./renderRoute";
+const favicon = require("serve-favicon");
+const NODE_ENV = process.env.NODE_ENV || 'development'
 
 const PORT = process.env.PORT || 9000;
-const app = express()
+const serve = (path, cache) =>
+	express.static(path, {
+		maxAge: cache && NODE_ENV === 'production' ? 1000 * 60 * 60 * 24 * 30 : 0,
+	});
 
-app.use(express.static(path.join(__dirname, '../../public')))
-console.log(path.join(__dirname, '../../public'))
-if (process.env.NODE_ENV !== 'production') {
-  /* eslint-disable global-require, import/no-extraneous-dependencies */
-  const { default: webpackConfig } = require('../../webpack.config.babel')
-  const webpackDevMiddleware = require('webpack-dev-middleware')
-  const webpack = require('webpack')
-  /* eslint-enable global-require, import/no-extraneous-dependencies */
+const app = express();
+let dev_instance;
+app.use(express.static(path.join(__dirname, "../../public")));
 
-  const compiler = webpack(webpackConfig)
+// serve favicon
+app.use("/manifest.json", serve(path.join(__dirname, "../../public", "manifest.json"), true));
+app.use(favicon(path.join(__dirname, "../../public", "favicon.ico")));
 
-  app.use(
-    webpackDevMiddleware(compiler, {
-      logLevel: 'silent',
-      publicPath: '/dist/web',
-      writeToDisk(filePath) {
-        return /dist\/node\//.test(filePath) || /loadable-stats/.test(filePath)
-      }
-    })
-  )
-//   console.log()
-  app.use(require("webpack-hot-middleware")(compiler.compilers[0]));
+if (NODE_ENV !== "production") {
+	/* eslint-disable global-require, import/no-extraneous-dependencies */
+	const { default: webpackConfig } = require("../../webpack.config.babel");
+	const webpackDevMiddleware = require("webpack-dev-middleware");
+	const webpack = require("webpack");
+	/* eslint-enable global-require, import/no-extraneous-dependencies */
+
+	const compiler = webpack(webpackConfig);
+	dev_instance = webpackDevMiddleware(compiler, {
+		logLevel: "silent",
+		publicPath: "/dist/web",
+		writeToDisk: (filePath) => {
+			return /dist\/node\//.test(filePath) || /loadable-stats/.test(filePath);
+		}
+	});
+	console.log("webpack building...");
+	app.use(dev_instance);
+
+	app.use(require("webpack-hot-middleware")(compiler.compilers[0]));
 }
 
-const nodeStats = path.resolve(
-  __dirname,
-  '../../public/dist/node/loadable-stats.json',
-)
-
-const webStats = path.resolve(
-  __dirname,
-  '../../public/dist/web/loadable-stats.json',
-)
-
-app.get('*', (req, res) => {
-	let context = {}
-  const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats, outputPath: path.resolve('public/dist/node') })
-  const { default: App } = nodeExtractor.requireEntrypoint()
-
-  const webExtractor = new ChunkExtractor({ statsFile: webStats, outputPath: path.resolve('public/dist/web') })
-  const jsx = webExtractor.collectChunks(<StaticRouter location={req.url} context={context}>
-	  <App />
-	</StaticRouter>)
-
-  const html = renderToString(jsx)
-
-  res.set('content-type', 'text/html')
-  res.send(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-        ${webExtractor.getLinkTags()}
-        ${webExtractor.getStyleTags()}
-        </head>
-        <body>
-          <div id="main">${html}</div>
-          ${webExtractor.getScriptTags()}
-        </body>
-      </html>
-    `)
-})
+app.get("*", renderRoute);
 
 // eslint-disable-next-line no-console
-app.listen(PORT, () => console.log(`Server started http://localhost:${PORT}`))
+app.listen(PORT, () => {
+	if (NODE_ENV !== "production") {
+		dev_instance.waitUntilValid(() => {
+			console.log(`Server started http://localhost:${PORT}`);
+		});
+	} else {
+		console.log(`Server started http://localhost:${PORT}`);
+	}
+});
