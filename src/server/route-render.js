@@ -4,11 +4,9 @@ import Helmet from "react-helmet";
 import { StaticRouter } from "react-router-dom";
 import { renderToStaticMarkup, renderToString } from "react-dom/server";
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
-
-import Html from "./html";
+import Html from "./Html";
 
 const nodeStats = path.resolve(__dirname, "../../public/dist/node/loadable-stats.json");
-
 const webStats = path.resolve(__dirname, "../../public/dist/web/loadable-stats.json");
 
 const renderRoute = (req, res) => {
@@ -34,15 +32,17 @@ const renderRoute = (req, res) => {
 	const helmet = Helmet.rewind();
 
 	res.set("content-type", "text/html");
-	res.send("<!DOCTYPE html>" +
-		renderToString(
-			<Html {...{
-					extractor: webExtractor,
-					content,
-					helmet
-				}}
-			/>
-		)
+	res.send(
+		"<!DOCTYPE html>" +
+			renderToString(
+				<Html
+					{...{
+						extractor: webExtractor,
+						content,
+						helmet
+					}}
+				/>
+			)
 	);
 };
 

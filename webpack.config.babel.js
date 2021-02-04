@@ -7,17 +7,18 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const DIST_PATH = path.resolve(__dirname, "public/dist");
-const production = process.env.NODE_ENV === "production";
-const development = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
+const NODE_ENV = process.env.NODE_ENV || "development";
+const __DEV__ = NODE_ENV === 'development';
+const __PROD__ = NODE_ENV !== 'development';
 
 const getConfig = (target) => ({
 	name: target,
 	context: path.join(__dirname, "src"),
-	mode: development ? "development" : "production",
+	mode: __PROD__ ?  "production" : "development",
 	target,
 	entry: [
 		'@babel/polyfill',
-		...(development && target === "web"
+		...(__DEV__ && target === "web"
 			? [
 					"react-hot-loader/patch",
 					"webpack-hot-middleware/client?noInfo=false&reload=true&overlay=true"
@@ -84,7 +85,7 @@ const getConfig = (target) => ({
 	externals: target === "node" ? ["@loadable/component", nodeExternals()] : undefined,
 	output: {
 		path: path.join(DIST_PATH, target),
-		filename: production ? "[name]-[chunkhash:8].js" : "[name].js",
+		filename: __PROD__ ? "[name]-[chunkhash:8].js" : "[name].js",
 		publicPath: `/dist/${target}/`,
 		libraryTarget: target === "node" ? "commonjs2" : undefined
 	},
@@ -125,7 +126,14 @@ const getConfig = (target) => ({
 		new LoadablePlugin(),
 		new MiniCssExtractPlugin(),
 		new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en-gb/),
-		...(development && target === "web" ? [new webpack.HotModuleReplacementPlugin()] : [])
+		...(__DEV__ && target === "web" ? [new webpack.HotModuleReplacementPlugin()] : []),
+		new webpack.DefinePlugin({
+			'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+			__DEV__,
+			__PROD__,
+			__SERVER__: target === "node",
+			__CLIENT__: target === "web"
+		}),
 		// new BundleAnalyzerPlugin(),
 	]
 });

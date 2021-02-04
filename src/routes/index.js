@@ -12,7 +12,8 @@ const routes = [
 		{
 			component: About,
 			path: "/about",
-			exact: true
+			exact: true,
+			loadData: () => console.log('load data /about page')
 		}
 ];
 

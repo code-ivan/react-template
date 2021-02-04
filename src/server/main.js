@@ -1,6 +1,6 @@
 import path from "path";
 import express from "express";
-import renderRoute from "./renderRoute";
+import renderRoute from "./route-render";
 const favicon = require("serve-favicon");
 const NODE_ENV = process.env.NODE_ENV || 'development'
 
