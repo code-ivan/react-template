@@ -1,4 +1,7 @@
 {
+	"name": "react-template",
+	"version": "1.0.0",
+	"description": "React template SSR",
 	"private": true,
 	"scripts": {
 		"dev": "nodemon src/server/main.js",
