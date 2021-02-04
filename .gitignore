@@ -1,4 +1,5 @@
 .tasks
+template-rangewell
 lib
 node_modules
 public
