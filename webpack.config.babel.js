@@ -20,6 +20,7 @@ const cssLoader = (target) =>
 
 const getConfig = (target) => ({
 	name: target,
+	context: path.join(__dirname, "src"),
 	mode: development ? "development" : "production",
 	target,
 	entry: [
@@ -29,7 +30,7 @@ const getConfig = (target) => ({
 					"webpack-hot-middleware/client?noInfo=false&reload=true&overlay=true"
 			  ]
 			: []),
-		`./src/client/main-${target}.js`
+		`./client/main-${target}.js`
 	],
 	module: {
 		rules: [

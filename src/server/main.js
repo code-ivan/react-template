@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 9000;
 const app = express()
 
 app.use(express.static(path.join(__dirname, '../../public')))
-
+console.log(path.join(__dirname, '../../public'))
 if (process.env.NODE_ENV !== 'production') {
   /* eslint-disable global-require, import/no-extraneous-dependencies */
   const { default: webpackConfig } = require('../../webpack.config.babel')
@@ -45,10 +45,10 @@ const webStats = path.resolve(
 
 app.get('*', (req, res) => {
 	let context = {}
-  const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats })
+  const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats, outputPath: path.resolve('public/dist/node') })
   const { default: App } = nodeExtractor.requireEntrypoint()
 
-  const webExtractor = new ChunkExtractor({ statsFile: webStats })
+  const webExtractor = new ChunkExtractor({ statsFile: webStats, outputPath: path.resolve('public/dist/web') })
   const jsx = webExtractor.collectChunks(<StaticRouter location={req.url} context={context}>
 	  <App />
 	</StaticRouter>)
