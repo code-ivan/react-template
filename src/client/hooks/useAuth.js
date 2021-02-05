@@ -17,7 +17,10 @@ export const useAuth = () => {
 	return useContext(authContext);
 };
 
-const authStateChange = (callback) => callback;
+const authStateChange = (callback) => {
+	console.log('authStateChange')
+	callback()
+};
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
@@ -26,7 +29,7 @@ function useProvideAuth() {
 	// Wrap any Firebase methods we want to use making sure ...
 	// ... to save the user to state.
 	const signin = (email, password) => {
-		const user = { user: "Ivan" };
+		const user = { name: "Ivan" };
 		setUser(user);
 		return user;
 		// return firebase
@@ -39,7 +42,7 @@ function useProvideAuth() {
 	};
 
 	const signup = (email, password) => {
-		const user = { user: "Ivan", email, password };
+		const user = { name: "Ivan", email, password };
 		setUser(user);
 		return user;
 		// return firebase
@@ -86,6 +89,7 @@ function useProvideAuth() {
 	// ... component that utilizes this hook to re-render with the ...
 	// ... latest auth object.
 	useEffect(() => {
+		console.log('useEffect auth')
 		// const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
 		const unsubscribe = authStateChange((user) => {
 			if (user) {
