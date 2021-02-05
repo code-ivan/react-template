@@ -11,16 +11,13 @@ import configureStore from './store';
 const store = configureStore(window.__INITIAL_STATE__)
 
 import App from "./core/App";
-import RouteDataLoader from "./core/RouteDataLoader";
 
 const render = (Component) =>{
 	const root = document.getElementById("main");
 	hydrate(
 		<Provider store={store}>
 			<Router>
-				{/* <RouteDataLoader> */}
-					<Component />
-				{/* </RouteDataLoader> */}
+				<Component />
 			</Router>
 		</Provider>,
 		root
