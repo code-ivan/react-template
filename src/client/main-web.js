@@ -18,9 +18,9 @@ const render = (Component) =>{
 	hydrate(
 		<Provider store={store}>
 			<Router>
-				<RouteDataLoader>
+				{/* <RouteDataLoader> */}
 					<Component />
-				</RouteDataLoader>
+				{/* </RouteDataLoader> */}
 			</Router>
 		</Provider>,
 		root

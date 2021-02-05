@@ -30,7 +30,7 @@ const renderRoute = (req, res) => {
 	console.log("render: ", req.url);
 	const store = configureStore()
 
-	fetchData({pathname:req.url}, store, true).then((r)=>{
+	// fetchData({pathname:req.url}, store, true).then((r)=>{
 		const content = renderToStaticMarkup(
 			<ChunkExtractorManager extractor={webExtractor}>
 				<Provider store={ store }>
@@ -57,7 +57,7 @@ const renderRoute = (req, res) => {
 					/>
 				)
 		);
-	})
+	// })
 	
 };
 
