@@ -13,7 +13,7 @@ const routes = [
 			component: About,
 			path: "/about",
 			exact: true,
-			loadData: () => console.log('load data /about page')
+			loadData: () => ({type:'FETCH_ABOUT', payload: {about:'Data about'}})
 		}
 ];
 

@@ -1,5 +1,10 @@
 import React from 'react'
-const Html = ({ extractor, content, helmet }) => {
+const getInitialState = state => {
+	const json = JSON.stringify(state).replace(/</g, '\\u003c')
+	return `window.__INITIAL_STATE__=${json}`
+}
+
+const Html = ({ extractor, content, helmet, initial_state }) => {
 	return (
 		<html>
 			<head>
@@ -14,6 +19,7 @@ const Html = ({ extractor, content, helmet }) => {
 			<body>
 				<div id="main" dangerouslySetInnerHTML={{ __html: content }} />
 
+				<script dangerouslySetInnerHTML={{ __html: getInitialState(initial_state) }} />
 				{extractor.getScriptElements()}
 			</body>
 		</html>

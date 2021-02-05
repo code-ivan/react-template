@@ -3,8 +3,13 @@ import express from "express";
 import renderRoute from "./route-render";
 const favicon = require("serve-favicon");
 const NODE_ENV = process.env.NODE_ENV || 'development'
-
 const PORT = process.env.PORT || 9000;
+global.NODE_ENV = NODE_ENV
+global.__DEV__ = NODE_ENV === 'development';
+global.__PROD__ = NODE_ENV !== 'development';
+global.__SERVER__ = true;
+global.__CLIENT__ = false;
+
 const serve = (path, cache) =>
 	express.static(path, {
 		maxAge: cache && NODE_ENV === 'production' ? 1000 * 60 * 60 * 24 * 30 : 0,

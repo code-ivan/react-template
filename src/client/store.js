@@ -6,13 +6,13 @@ import reducer from './reducer'
 
 // add logger in dev environment
 const logger = createLogger({
-	predicate: (getState, action) => __DEV__ && __CLIENT__
+	predicate: (getState, action) => __DEV__, // && __CLIENT__
+	collapsed: () => __SERVER__
 })
 
 // create store for reducer
 const composedStore = compose(
-	applyMiddleware(thunk, logger),
-	__CLIENT__ && window.devToolsExtension ? window.devToolsExtension() : (f) => f
+	applyMiddleware(thunk, logger)
 )(createStore)
 
 const configureStore = (initialState) => {

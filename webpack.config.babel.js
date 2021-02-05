@@ -5,6 +5,7 @@ import nodeExternals from "webpack-node-externals";
 import LoadablePlugin from "@loadable/webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 
 const DIST_PATH = path.resolve(__dirname, "public/dist");
 const NODE_ENV = process.env.NODE_ENV || "development";
@@ -123,6 +124,9 @@ const getConfig = (target) => ({
 		// },
 	},
 	plugins: [
+		new CleanWebpackPlugin({
+			verbose: true
+		}),
 		new LoadablePlugin(),
 		new MiniCssExtractPlugin(),
 		new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en-gb/),
@@ -131,8 +135,8 @@ const getConfig = (target) => ({
 			'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
 			__DEV__,
 			__PROD__,
-			__SERVER__: target === "node",
-			__CLIENT__: target === "web"
+			'__SERVER__':JSON.stringify( target === "node" ),
+			'__CLIENT__': JSON.stringify( target === "web" )
 		}),
 		// new BundleAnalyzerPlugin(),
 	]

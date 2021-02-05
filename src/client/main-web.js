@@ -5,20 +5,24 @@ import { BrowserRouter as Router } from "react-router-dom";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { loadableReady } from "@loadable/component";
 
-// TODO: react-redux
-// import { Provider } from 'react-redux'
-// import configureStore from './store';
-// const store = configureStore(window.__INITIAL_STATE__)
-// hydrate(<Provider store={store}>...</Provider>
+// react-redux
+import { Provider } from 'react-redux'
+import configureStore from './store';
+const store = configureStore(window.__INITIAL_STATE__)
 
 import App from "./core/App";
+import RouteDataLoader from "./core/RouteDataLoader";
 
 const render = (Component) =>{
 	const root = document.getElementById("main");
 	hydrate(
-		<Router>
-			<Component />
-		</Router>,
+		<Provider store={store}>
+			<Router>
+				<RouteDataLoader>
+					<Component />
+				</RouteDataLoader>
+			</Router>
+		</Provider>,
 		root
 	);
 }
