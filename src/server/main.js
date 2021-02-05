@@ -17,7 +17,8 @@ const serve = (path, cache) =>
 
 const app = express();
 let dev_instance;
-app.use(express.static(path.join(__dirname, "../../public")));
+// app.use(express.static(path.join(__dirname, "../../public")));
+app.use(serve(path.join(__dirname, "../../public"), true));
 
 // serve favicon
 app.use("/manifest.json", serve(path.join(__dirname, "../../public", "manifest.json"), true));

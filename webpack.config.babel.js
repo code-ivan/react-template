@@ -125,7 +125,7 @@ const getConfig = (target) => ({
 	},
 	plugins: [
 		new CleanWebpackPlugin({
-			verbose: true
+			// verbose: true
 		}),
 		new LoadablePlugin(),
 		new MiniCssExtractPlugin(),

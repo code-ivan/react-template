@@ -17,7 +17,7 @@ const Html = ({ extractor, content, helmet, initial_state }) => {
 				{extractor.getStyleElements()}
 			</head>
 			<body>
-				<div id="main" dangerouslySetInnerHTML={{ __html: content }} />
+				<div id="main" />
 
 				<script dangerouslySetInnerHTML={{ __html: getInitialState(initial_state) }} />
 				{extractor.getScriptElements()}
