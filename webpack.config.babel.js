@@ -4,7 +4,7 @@ import webpack from "webpack";
 import nodeExternals from "webpack-node-externals";
 import LoadablePlugin from "@loadable/webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 
 const DIST_PATH = path.resolve(__dirname, "public/dist");
@@ -17,16 +17,16 @@ const getConfig = (target) => ({
 	context: path.join(__dirname, "src"),
 	mode: __PROD__ ?  "production" : "development",
 	target,
-	entry: [
-		'@babel/polyfill',
+	entry: {
+		babel:'@babel/polyfill',
 		...(__DEV__ && target === "web"
-			? [
+			? {hot:[
 					"react-hot-loader/patch",
 					"webpack-hot-middleware/client?noInfo=false&reload=true&overlay=true"
-			  ]
-			: []),
-		`./client/main-${target}.js`
-	],
+			  ]}
+			: {}),
+		main:`./client/main-${target}.js`
+	},
 	module: {
 		rules: [
 			{
@@ -104,6 +104,7 @@ const getConfig = (target) => ({
 				vendors: {
 					test: /[\\/]node_modules[\\/]/,
 					name: "vendors",
+					// maxSize: 300,
 					priority: -10
 				},
 				default: {
@@ -124,9 +125,7 @@ const getConfig = (target) => ({
 		// },
 	},
 	plugins: [
-		new CleanWebpackPlugin({
-			verbose: true
-		}),
+		new CleanWebpackPlugin(),
 		new LoadablePlugin(),
 		new MiniCssExtractPlugin(),
 		new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en-gb/),
