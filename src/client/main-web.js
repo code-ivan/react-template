@@ -1,30 +1,23 @@
-import "core-js";
+// import "core-js";
 import React from "react";
 import { hydrate } from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { loadableReady } from "@loadable/component";
-
-// react-redux
-import { Provider } from "react-redux";
-import configureStore from "./store";
-const store = configureStore(window.__INITIAL_STATE__);
-
 import App from "./core/App";
-import { createBroswerContext } from "use-sse";
 
+// server side data fetch
+import { createBroswerContext } from "use-sse";
 const BroswerDataContext = createBroswerContext();
-window._initialDataContext;
+
 const render = (Component) => {
 	const root = document.getElementById("main");
 	hydrate(
-		<Provider store={store}>
-			<Router>
-				<BroswerDataContext>
-					<Component />
-				</BroswerDataContext>
-			</Router>
-		</Provider>,
+		<Router>
+			<BroswerDataContext>
+				<Component />
+			</BroswerDataContext>
+		</Router>,
 		root
 	);
 };
