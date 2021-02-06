@@ -4,8 +4,8 @@ import webpack from "webpack";
 import nodeExternals from "webpack-node-externals";
 import LoadablePlugin from "@loadable/webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const DIST_PATH = path.resolve(__dirname, "public/dist");
 const NODE_ENV = process.env.NODE_ENV || "development";
@@ -104,7 +104,6 @@ const getConfig = (target) => ({
 				vendors: {
 					test: /[\\/]node_modules[\\/]/,
 					name: "vendors",
-					// maxSize: 300,
 					priority: -10
 				},
 				default: {
@@ -114,15 +113,6 @@ const getConfig = (target) => ({
 				}
 			}
 		}
-		// splitChunks: {
-		// 	cacheGroups: {
-		// 		commons: {
-		// 			test: /[\\/]node_modules[\\/]/,
-		// 			name: "vendors",
-		// 			chunks: "all",
-		// 		},
-		// 	},
-		// },
 	},
 	plugins: [
 		new CleanWebpackPlugin(),
