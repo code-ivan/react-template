@@ -95,6 +95,7 @@ const getConfig = (target) => ({
 		splitChunks: {
 			chunks: "async",
 			minSize: 30000,
+			maxSize: 340000,
 			minChunks: 1,
 			maxAsyncRequests: 5,
 			maxInitialRequests: 3,
