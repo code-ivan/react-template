@@ -1,7 +1,7 @@
 import React from 'react'
 const getInitialState = state => {
-	const json = JSON.stringify(state).replace(/</g, '\\u003c')
-	return `window.__INITIAL_STATE__=${json}`
+	const json = JSON.stringify(state)
+	return `window._initialDataContext=${json}`
 }
 
 const Html = ({ extractor, content, helmet, initial_state }) => {
