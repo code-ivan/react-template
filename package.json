@@ -5,6 +5,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "nodemon src/server/main.js",
+		"dev-debug": "nodemon --inspect src/server/main.js",
 		"build": "NODE_ENV=production npm run build:webpack && npm run build:lib",
 		"build:webpack": "webpack",
 		"build:lib": "babel -d lib src",

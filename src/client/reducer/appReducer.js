@@ -1,10 +1,14 @@
-const appReducer = (state = {}, action) => {
+const appReducer = (
+	state = {
+		navigation: null,
+		about: ''
+	},
+	action
+) => {
 	switch (action.type) {
-        case 'FETCH_ABOUT':
-            state = {...state,
-                ...action.payload
-            }
-            break;
+		case "FETCH_ABOUT":
+			state = { ...state, about: action.payload };
+			break;
 	}
 	return state;
 };

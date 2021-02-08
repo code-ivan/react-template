@@ -36,35 +36,38 @@ const renderRoute = async (req, res) => {
 		</ChunkExtractorManager>
 	);
 
-	const data = await resolveData();
+	res.status(context.status||200)
+	if (context.status == 301) {
+		res.redirect(context.url);
+	} else {
+		const data = await resolveData();
 
-	const content = renderToStaticMarkup(
-		<ChunkExtractorManager extractor={webExtractor}>
-			<StaticRouter location={req.url} context={context}>
-				<ServerDataContext>
-					<App />
-				</ServerDataContext>
-			</StaticRouter>
-		</ChunkExtractorManager>
-	);
+		const content = renderToStaticMarkup(
+			<ChunkExtractorManager extractor={webExtractor}>
+				<StaticRouter location={req.url} context={context}>
+					<ServerDataContext>
+						<App />
+					</ServerDataContext>
+				</StaticRouter>
+			</ChunkExtractorManager>
+		);
 
-	const helmet = Helmet.rewind();
-
-	res.set("content-type", "text/html");
-	res.send(
-		"<!DOCTYPE html>" +
-			renderToString(
-				<Html
-					{...{
-						extractor: webExtractor,
-						content,
-						helmet,
-						initial_state: data.toJSON()
-					}}
-				/>
-			)
-	);
-	// })
+		const helmet = Helmet.rewind();
+		res.set("content-type", "text/html");
+		res.send(
+			"<!DOCTYPE html>" +
+				renderToString(
+					<Html
+						{...{
+							extractor: webExtractor,
+							content,
+							helmet,
+							initial_state: data.toJSON()
+						}}
+					/>
+				)
+		);
+	}
 };
 
 export default renderRoute;

@@ -1,13 +1,12 @@
 import React, { Fragment } from "react";
 import Helmet from "react-helmet";
-import fetch from "node-fetch";
 import styles from "./About.scss";
 import { useSSE } from "use-sse";
+import { fetchModel } from "./actions";
 
 const About = () => {
 	const [people] = useSSE(() => {
-		console.log("Fetch data About");
-		return fetch("https://api.mocki.io/v1/b043df5a").then((res) => res.json());
+		return fetchModel('b043df5a')
 	}, []);
 
 	return (

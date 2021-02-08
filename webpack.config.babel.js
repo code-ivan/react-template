@@ -41,7 +41,7 @@ const getConfig = (target) => ({
 			},
 			// design sytem
 			{
-				test: /\.scss$|\.css$/,
+				test: /\.(sc|c)ss$/,
 				include: path.join(__dirname, "src/styles/main.scss"),
 				use: [
 					MiniCssExtractPlugin.loader,
@@ -62,7 +62,7 @@ const getConfig = (target) => ({
 			},
 			// all other styles
 			{
-				test: /\.scss$|\.css$/,
+				test: /\.(sc|c)ss$/,
 				exclude: path.join(__dirname, "src/styles/main.scss"),
 				use: [
 					MiniCssExtractPlugin.loader,
@@ -86,7 +86,7 @@ const getConfig = (target) => ({
 	externals: target === "node" ? ["@loadable/component", nodeExternals()] : undefined,
 	output: {
 		path: path.join(DIST_PATH, target),
-		filename: __PROD__ ? "[name]-[chunkhash:8].js" : "[name].js",
+		filename: __PROD__ ? "[name]-[chunkhash:4].js" : "[name].js",
 		publicPath: `/dist/${target}/`,
 		libraryTarget: target === "node" ? "commonjs2" : undefined
 	},
@@ -118,7 +118,10 @@ const getConfig = (target) => ({
 	plugins: [
 		new CleanWebpackPlugin(),
 		new LoadablePlugin(),
-		new MiniCssExtractPlugin(),
+		new MiniCssExtractPlugin({
+			filename: '[name].css',
+      		chunkFilename: '[name]-[chunkhash:4].css'
+		}),
 		new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en-gb/),
 		...(__DEV__ && target === "web" ? [new webpack.HotModuleReplacementPlugin()] : []),
 		new webpack.DefinePlugin({

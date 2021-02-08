@@ -44,7 +44,18 @@ if (NODE_ENV !== "production") {
 	app.use(require("webpack-hot-middleware")(compiler.compilers[0]));
 }
 
-app.get("*", renderRoute);
+app.get(/^[^.]+$|\.(?!(jpg|gif|png|css|js)$)([^.]+$)/, renderRoute);
+
+app.get("*",(req, res, next) => {
+	res.status(404);
+	res.redirect('/error');
+});
+// error handling
+app.use((err, req, res, next) => {
+	console.error(`error: ${err.message}}`);
+	console.log(err)
+	res.status(err.status || 500);
+});
 
 // eslint-disable-next-line no-console
 app.listen(PORT, () => {
