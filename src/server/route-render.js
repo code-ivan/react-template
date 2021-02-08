@@ -6,7 +6,7 @@ import { renderToStaticMarkup, renderToString } from "react-dom/server";
 // loadable
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
 // redux
-import { Provider } from 'react-redux'
+import { Provider } from "react-redux";
 
 import Html from "./Html";
 import configureStore from "../client/store";
@@ -28,37 +28,41 @@ const renderRoute = (req, res) => {
 		outputPath: path.resolve("public/dist/web")
 	});
 	console.log("render: ", req.url);
-	const store = configureStore()
+	const store = configureStore();
 
-	fetchData({pathname:req.url}, store, true).then((r)=>{
+	fetchData({ pathname: req.url }, store, true).then((r) => {
 		const content = renderToStaticMarkup(
 			<ChunkExtractorManager extractor={webExtractor}>
-				<Provider store={ store }>
+				<Provider store={store}>
 					<StaticRouter location={req.url} context={context}>
 						<App />
 					</StaticRouter>
 				</Provider>
 			</ChunkExtractorManager>
 		);
-		const helmet = Helmet.rewind();
-		const initial_state = store.getState()
+		res.status(context.status || 200);
+		if (context.status == 301) {
+			res.redirect(context.url);
+		} else {
+			const helmet = Helmet.rewind();
+			const initial_state = store.getState();
 
-		res.set("content-type", "text/html");
-		res.send(
-			"<!DOCTYPE html>" +
-				renderToString(
-					<Html
-						{...{
-							extractor: webExtractor,
-							content,
-							helmet,
-							initial_state 
-						}}
-					/>
-				)
-		);
-	})
-	
+			res.set("content-type", "text/html");
+			res.send(
+				"<!DOCTYPE html>" +
+					renderToString(
+						<Html
+							{...{
+								extractor: webExtractor,
+								content,
+								helmet,
+								initial_state
+							}}
+						/>
+					)
+			);
+		}
+	});
 };
 
 export default renderRoute;
